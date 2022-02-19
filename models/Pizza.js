@@ -2,6 +2,7 @@
 // const { Schema, model } = require('mongoose')
 // Not sure if the error (unique was working) was coming from above or because I hadn't dropped the database before trying again
 const mongoose = require('mongoose');
+const dateFormat = require('../utils/dateFormat');
 
 // Schema
 // We don't use mongoose.Schema because we directly imported the Schema
@@ -21,9 +22,11 @@ const pizzaSchema = new mongoose.Schema(
     },
     // A timestamp of when the pizza was created
     // Will automatically be converted to "2022-02-19T04:44:42.893Z" format
+    // This format won't be saved in the database, it is just modifying it when we try to get this data in JSON format
     createdAt: {
       type: Date,
       default: Date.now,
+      get: (date) => dateFormat(date),
     },
     // A timestamp of any updates to the pizza's data
     //   updatedAt: {
@@ -71,7 +74,8 @@ const pizzaSchema = new mongoose.Schema(
   //Options Object
   {
     // When the data is outputted as JSON or as an object, we want our virtual properties to show
-    toJSON: { virtuals: true },
+    // We also want our getters to show
+    toJSON: { virtuals: true, getters: true },
     toObject: { virtuals: true },
     // We set id to false because this is a virtual that Mongoose returns, and we don’t need it
     id: false,
