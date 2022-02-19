@@ -31,12 +31,18 @@ const pizzaSchema = new mongoose.Schema({
   // The pizza's suggested size
   size: {
     type: String,
-    enum: ['small', 'medium', 'large', 'extra-large'],
+    enum: ['Personal', 'Small', 'Medium', 'Large', 'Extra Large'],
     validate: {
       // This function gets access to what was inputted (val) and the document (using the "this" keyword)
       // The "this" keyword will only apply to documents that are just created, not updated!
       validator: function (val) {
-        const acceptedSizes = ['small', 'medium', 'large', 'extra-large'];
+        const acceptedSizes = [
+          'Personal',
+          'Small',
+          'Medium',
+          'Large',
+          'Extra Large',
+        ];
 
         acceptedSizes.forEach((el) => {
           if (val === el) {
@@ -46,7 +52,7 @@ const pizzaSchema = new mongoose.Schema({
         });
       },
       message:
-        'Size of pizza must be one of these options: 1) small, 2) medium, 3) large, 4) extra-large ',
+        'Size of pizza must be one of these options: 1) Personal 2) Small, 3) Medium, 4) Large, 5) Extra Large ',
     },
   },
   // The pizza's toppings
