@@ -4,13 +4,14 @@ const mongoose = require('mongoose');
 
 // Variables
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 // Global  Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
+// Route Middleware
 app.use(require('./routes'));
 
 // Connect to DB

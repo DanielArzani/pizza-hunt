@@ -1,13 +1,17 @@
 // We could import the entire mongoose library, but we only need to worry about the Schema constructor and model function, so we'll just import them
-const { Schema, model } = require('mongoose');
+// const { Schema, model } = require('mongoose')
+// Not sure if the error (unique was working) was coming from above or because I hadn't dropped the database before trying again
+const mongoose = require('mongoose');
 
 // Schema
 // We don't use mongoose.Schema because we directly imported the Schema
-const pizzaSchema = new Schema({
+const pizzaSchema = new mongoose.Schema({
   // Name of the pizza
   pizzaName: {
     type: String,
+    trim: true,
     required: [true, 'A pizza requires a name'],
+    unique: true,
   },
   // The name of the user that created the pizza
   createdBy: {
@@ -15,6 +19,7 @@ const pizzaSchema = new Schema({
     required: [true, 'A user requires a name'],
   },
   // A timestamp of when the pizza was created
+  // Will automatically be converted to "2022-02-19T04:44:42.893Z" format
   createdAt: {
     type: Date,
     default: Date.now,
@@ -27,6 +32,22 @@ const pizzaSchema = new Schema({
   size: {
     type: String,
     enum: ['small', 'medium', 'large', 'extra-large'],
+    validate: {
+      // This function gets access to what was inputted (val) and the document (using the "this" keyword)
+      // The "this" keyword will only apply to documents that are just created, not updated!
+      validator: function (val) {
+        const acceptedSizes = ['small', 'medium', 'large', 'extra-large'];
+
+        acceptedSizes.forEach((el) => {
+          if (val === el) {
+            return true;
+          }
+          return false;
+        });
+      },
+      message:
+        'Size of pizza must be one of these options: 1) small, 2) medium, 3) large, 4) extra-large ',
+    },
   },
   // The pizza's toppings
   toppings: {
@@ -37,7 +58,7 @@ const pizzaSchema = new Schema({
 
 // Model
 // We don't use mongoose.model because we directly imported the model
-const Pizza = model('Pizza', pizzaSchema);
+const Pizza = mongoose.model('Pizza', pizzaSchema);
 
 // Exporting the pizza model
 module.exports = Pizza;
