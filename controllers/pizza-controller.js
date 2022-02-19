@@ -8,6 +8,14 @@ const pizzaController = {
    *------------------------**/
   getAllPizza(req, res) {
     Pizza.find({})
+      .populate({
+        path: 'comments',
+        select: '-__v',
+      })
+      // Removes __v field
+      .select('-__v')
+      // Sort pizza's by newest to oldest order
+      .sort({ _id: -1 })
       .then((dbPizzaData) => {
         res.status(200).json({
           status: 'success',
@@ -32,6 +40,11 @@ const pizzaController = {
   // Here we are de-structuring params out of req.params
   getPizzaById({ params }, res) {
     Pizza.findById(params.id)
+      .populate({
+        path: 'comments',
+        select: '-__v',
+      })
+      .select('-__v')
       .then((dbPizzaData) => {
         if (!dbPizzaData) {
           res.status(404).json({
