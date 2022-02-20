@@ -18,6 +18,7 @@ const pizzaSchema = new mongoose.Schema(
     // The name of the user that created the pizza
     createdBy: {
       type: String,
+      trim: true,
       required: [true, 'A user requires a name'],
     },
     // A timestamp of when the pizza was created
@@ -36,6 +37,7 @@ const pizzaSchema = new mongoose.Schema(
     size: {
       type: String,
       enum: ['Personal', 'Small', 'Medium', 'Large', 'Extra Large'],
+      default: 'Large',
       validate: {
         // This function gets access to what was inputted (val) and the document (using the "this" keyword)
         // The "this" keyword will only apply to documents that are just created, not updated!

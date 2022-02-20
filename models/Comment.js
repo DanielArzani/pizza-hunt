@@ -11,9 +11,12 @@ const replySchema = new mongoose.Schema(
     },
     replyBody: {
       type: String,
+      required: true,
+      trim: true,
     },
     writtenBy: {
       type: String,
+      required: true,
     },
     createdAt: {
       type: Date,

@@ -44,7 +44,7 @@ const commentController = {
       params.commentId,
       // Push into array what ever is in the req.body that matches the model criteria
       { $push: { replies: body } },
-      { new: true }
+      { new: true, runValidators: true }
     )
       .then((dbPizzaData) => {
         if (!dbPizzaData) {
