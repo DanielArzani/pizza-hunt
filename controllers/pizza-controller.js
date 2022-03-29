@@ -1,7 +1,6 @@
 // Automatically looks for index.js and gets the Pizza model from there
 const { Pizza } = require('../models');
 
-// The functions will go in here as methods
 const pizzaController = {
   /**-------------------------
    *    Get all pizzas

@@ -1,11 +1,7 @@
-// We could import the entire mongoose library, but we only need to worry about the Schema constructor and model function, so we'll just import them
-// const { Schema, model } = require('mongoose')
-// Not sure if the error (unique was working) was coming from above or because I hadn't dropped the database before trying again
 const mongoose = require('mongoose');
 const dateFormat = require('../utils/dateFormat');
 
 // Schema
-// We don't use mongoose.Schema because we directly imported the Schema
 const pizzaSchema = new mongoose.Schema(
   {
     // Name of the pizza
@@ -22,25 +18,17 @@ const pizzaSchema = new mongoose.Schema(
       required: [true, 'A user requires a name'],
     },
     // A timestamp of when the pizza was created
-    // Will automatically be converted to "2022-02-19T04:44:42.893Z" format
-    // This format won't be saved in the database, it is just modifying it when we try to get this data in JSON format
     createdAt: {
       type: Date,
       default: Date.now,
       get: (date) => dateFormat(date),
     },
-    // A timestamp of any updates to the pizza's data
-    //   updatedAt: {
-    //     type: Date,
-    //   },
     // The pizza's suggested size
     size: {
       type: String,
       enum: ['Personal', 'Small', 'Medium', 'Large', 'Extra Large'],
       default: 'Large',
       validate: {
-        // This function gets access to what was inputted (val) and the document (using the "this" keyword)
-        // The "this" keyword will only apply to documents that are just created, not updated!
         validator: function (val) {
           const acceptedSizes = [
             'Personal',
@@ -65,7 +53,6 @@ const pizzaSchema = new mongoose.Schema(
     toppings: {
       type: Array,
     },
-    // Embedded Referencing
     comments: [
       {
         type: mongoose.Schema.ObjectId,
@@ -90,9 +77,6 @@ const pizzaSchema = new mongoose.Schema(
 
 // Get the number of comments a pizza has
 pizzaSchema.virtual('commentCount').get(function () {
-  // return this.comments.length;
-
-  //Here we're using the .reduce() method to tally up the total of every comment with its replies. In its basic form, .reduce() takes two parameters, an accumulator and a currentValue. Here, the accumulator is total, and the currentValue is comment. As .reduce() walks through the array, it passes the accumulating total and the current value of comment into the function, with the return of the function revising the total for the next iteration through the array.
   return this.comments.reduce(
     (total, comment) => total + comment.replies.length + 1,
     0
@@ -100,7 +84,6 @@ pizzaSchema.virtual('commentCount').get(function () {
 });
 
 // Model
-// We don't use mongoose.model because we directly imported the model
 const Pizza = mongoose.model('Pizza', pizzaSchema);
 
 // Exporting the pizza model

@@ -42,7 +42,6 @@ const commentSchema = new mongoose.Schema(
       default: Date.now,
       get: (createdAtVal) => dateFormat(createdAtVal),
     },
-    // Unlike in Pizza.js, replies are directly nested within the comment and not referred too
     replies: [replySchema],
   },
   //Options Object
@@ -60,7 +59,7 @@ const commentSchema = new mongoose.Schema(
  *   VIRTUALS
  *--------------**/
 
-// Get the number of comments a pizza has
+// Get the number of replies a comment has
 commentSchema.virtual('replyCount').get(function () {
   return this.replies.length;
 });
